@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "963039569609",
+    "firebase_url": "https://getting-serious.firebaseio.com",
+    "project_id": "getting-serious",
+    "storage_bucket": "getting-serious.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:963039569609:android:86f477464b401aac",
+        "android_client_info": {
+          "package_name": "com.developer.library"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "963039569609-0v8avli77mnuoccl2p4k9mtm6plvcvgb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.developer.library",
+            "certificate_hash": "8e3dac281363514ad63dcb1700f992d94ae14519"
+          }
+        },
+        {
+          "client_id": "963039569609-op0tgi551igl3jki0ebr4psram8nh2nt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtZ0fF5NvCIg6PjF-5lyZWmcjVzoeccSo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "963039569609-op0tgi551igl3jki0ebr4psram8nh2nt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
