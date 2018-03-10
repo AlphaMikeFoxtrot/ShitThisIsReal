@@ -3,6 +3,7 @@ package com.developer.library;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,12 +26,23 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     List<AuthUI.IdpConfig> providers;
-    // Button signOut;
+    Button signIn;
     ProgressDialog progressDialog;
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
+    SharedPreferences preferences_logged_in, preferences_username;
+    SharedPreferences.Editor editor, editor_username;
     FirebaseUser user;
     Intent toHome;
+
+    final int RC_SIGN_IN = 1;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,60 +54,73 @@ public class MainActivity extends AppCompatActivity {
         toHome = new Intent(this, HomeScreenActivity.class);
         toHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        preferences = this.getSharedPreferences("isLoggedIn", MODE_PRIVATE);
-        editor = preferences.edit();
+        preferences_logged_in = this.getSharedPreferences(getString(R.string.preference_name), MODE_PRIVATE);
+        editor = preferences_logged_in.edit();
+
+        preferences_username = this.getSharedPreferences(getString(R.string.preference_name_username), MODE_PRIVATE);
+        editor_username = preferences_username.edit();
+
         mAuth = FirebaseAuth.getInstance();
-        // signOut = findViewById(R.id.sign_out);
+
+        signIn = findViewById(R.id.sign_in);
 
         providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
                 new AuthUI.IdpConfig.GoogleBuilder().build()
         );
 
-//        editor.putBoolean("loggedIn", false);
-//        editor.commit();
+        if(preferences_logged_in.getBoolean(getString(R.string.boolean_name), false)){
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("checking login");
-        progressDialog.show();
-
-        if(preferences.getBoolean("loggedIn", false)){
             // user already logged in
-            // signOut.setVisibility(View.VISIBLE);
-            progressDialog.dismiss();
             startActivity(toHome);
-        } else {
-            startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build(), 1);
+
         }
+
+        signIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build(), RC_SIGN_IN);
+            }
+        });
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1) {
+        if (requestCode == RC_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
             if (resultCode == RESULT_OK) {
-                progressDialog.dismiss();
+
                 // Successfully signed in
                 // ...
-                // signOut.setVisibility(View.VISIBLE);
                 user = FirebaseAuth.getInstance().getCurrentUser();
                 String[] userName = user.getDisplayName().split(" ");
                 StringBuilder name = new StringBuilder();
+
                 for(int i = 0; i < userName.length; i++){
+
                     name.append(userName[i].toString().toLowerCase());
+
                     if(i == userName.length - 1){
                         //
                     } else {
+
                         name.append("_");
+
                     }
+
                 }
-                Toast.makeText(this, "" + name.toString(), Toast.LENGTH_SHORT).show();
-                editor.putBoolean("loggedIn", true);
+
+                editor_username.putString("current_user", name.toString());
+                editor_username.commit();
+
+                editor.putBoolean(getString(R.string.boolean_name), true);
                 editor.commit();
                 startActivity(toHome);
+
             } else {
                 // Sign in failed, check response for error code
                 // ...

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Library</string>
+    <string name="preference_name">isLoggedIn</string>
+    <string name="boolean_name">loggedIn</string>
+    <string name="preference_name_username">isLoggedIn</string>
+    <string name="string_name_username">loggedIn</string>
 </resources>

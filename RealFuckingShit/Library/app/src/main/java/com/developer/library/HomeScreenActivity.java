@@ -19,11 +19,22 @@ public class HomeScreenActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
 
     @Override
+    public void onBackPressed() {
+        if(preferences.getBoolean(getString(R.string.boolean_name), false)){
+            // user is logged in
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
 
-        preferences = this.getSharedPreferences("isLoggedIn", MODE_PRIVATE);
+        preferences = this.getSharedPreferences(getString(R.string.preference_name), MODE_PRIVATE);
         editor = preferences.edit();
 
         signOut = findViewById(R.id.sign_out);
@@ -37,7 +48,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Void> task) {
                                 // user is now signed out
                                 // startActivity(new Intent(MyActivity.this, SignInActivity.class));
-                                editor.putBoolean("loggedIn", false);
+                                editor.putBoolean(getString(R.string.boolean_name), false);
                                 editor.commit();
                                 Intent toMain = new Intent(HomeScreenActivity.this, MainActivity.class);
                                 toMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
